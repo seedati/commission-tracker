@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Commission Tracker — Evidence Board</title>
+  <meta name="description" content="Evidence-linked tracker with timeline, sources, and an interactive evidence board."/>
+  <style>
+    :root{--bg:#0b1020;--panel:#0f172a;--card:#111c35;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10);
+      --shadow:0 14px 44px rgba(0,0,0,.35);--radius:18px;--blue:#3b82f6;--cyan:#22d3ee;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--purple:#a855f7;
+      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";}
+    [data-theme="light"]{--bg:#f6f7fb;--panel:#ffffff;--card:#ffffff;--text:#0f172a;--muted:#475569;--border:rgba(15,23,42,.12);--shadow:0 10px 28px rgba(2,6,23,.10);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:var(--sans);color:var(--text);background:
+      radial-gradient(1000px 600px at 20% 0%, rgba(59,130,246,.18), transparent 60%),
+      radial-gradient(900px 550px at 80% 10%, rgba(168,85,247,.14), transparent 60%),
+      var(--bg);
+    }
+    a{color:#93c5fd;text-decoration:none} a:hover{text-decoration:underline}
+    header{position:sticky;top:0;z-index:50;display:flex;gap:14px;align-items:center;justify-content:space-between;
+      padding:14px 18px;border-bottom:1px solid var(--border);background:rgba(15,23,42,.72);backdrop-filter:blur(12px)}
+    [data-theme="light"] header{background:rgba(255,255,255,.86)}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:44px;height:44px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+      font-weight:950;color:#071022;background:linear-gradient(135deg,var(--blue),var(--purple));box-shadow:0 10px 26px rgba(59,130,246,.25)}
+    .title{font-weight:950;letter-spacing:.2px}
+    .subtitle{font-size:12px;color:var(--muted);margin-top:2px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .btn{border:1px solid var(--border);background:rgba(255,255,255,.06);color:var(--text);padding:10px 12px;border-radius:14px;cursor:pointer;font-weight:900}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(135deg,rgba(59,130,246,.95),rgba(34,211,238,.65));color:#06101e;border-color:rgba(255,255,255,.14)}
+    nav{position:sticky;top:74px;z-index:40;display:flex;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border);background:rgba(15,23,42,.35);backdrop-filter:blur(10px);overflow:auto}
+    [data-theme="light"] nav{background:rgba(255,255,255,.65)}
+    .tab{padding:10px 12px;border-radius:14px;border:1px solid transparent;color:var(--muted);font-weight:900;white-space:nowrap}
+    .tab.active{color:var(--text);border-color:var(--border);background:rgba(59,130,246,.14)}
+    main{max-width:1250px;margin:0 auto;padding:18px}
+    section{display:none;padding:16px 0 30px} section.active{display:block}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:980px){.grid-2{grid-template-columns:1fr}}
+    .card{border:1px solid var(--border);background:rgba(255,255,255,.04);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+    [data-theme="light"] .card{background:rgba(255,255,255,.98)}
+    h1{margin:6px 0 6px} h2{margin:0 0 10px;font-size:18px} p{line-height:1.45}
+    .muted{color:var(--muted)} .kicker{font-family:var(--mono);font-size:12px;color:var(--muted)}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);font-weight:950;font-size:12px}
+    .pill.ok{background:rgba(34,197,94,.14);color:#a7f3d0}
+    .pill.warn{background:rgba(245,158,11,.18);color:#fde68a}
+    .pill.bad{background:rgba(239,68,68,.15);color:#fecaca}
+    .badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:950;padding:6px 10px;border-radius:999px;border:1px solid var(--border)}
+    .badge.official{background:rgba(34,197,94,.14);color:#a7f3d0}
+    .badge.testimony{background:rgba(96,165,250,.14);color:#bfdbfe}
+    .badge.media{background:rgba(245,158,11,.18);color:#fde68a}
+    .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0 14px}
+    input,select{border:1px solid var(--border);background:rgba(255,255,255,.06);color:var(--text);border-radius:14px;padding:12px 12px;outline:none;min-width:240px}
+    [data-theme="light"] input,[data-theme="light"] select{background:#fff}
+    .chip{border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--muted);padding:9px 10px;border-radius:999px;cursor:pointer;font-weight:950;font-size:12px}
+    .chip.active{background:rgba(59,130,246,.14);color:var(--text)}
+    .timeline{display:flex;flex-direction:column;gap:12px}
+    .titem{border:1px solid var(--border);background:rgba(255,255,255,.04);border-radius:var(--radius);padding:12px 14px;display:flex;gap:12px;cursor:pointer}
+    .tdate{min-width:120px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+    .ttitle{font-weight:950;margin-bottom:4px}
+    .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .tag{font-size:11px;padding:5px 8px;border-radius:999px;border:1px solid var(--border);color:var(--muted)}
+    .list{display:flex;flex-direction:column;gap:10px}
+    .litem{border:1px solid var(--border);background:rgba(255,255,255,.04);border-radius:var(--radius);padding:12px 14px;cursor:pointer}
+    .litem:hover{transform:translateY(-1px)}
+    .ltitle{font-weight:950} .lsub{font-size:12px;color:var(--muted);margin-top:4px}
+    .board{display:grid;grid-template-columns:2fr 1fr;gap:14px;min-height:72vh}
+    @media(max-width:980px){.board{grid-template-columns:1fr}}
+    .boardLeft{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:rgba(255,255,255,.03);box-shadow:var(--shadow)}
+    .boardRight{border:1px solid var(--border);border-radius:var(--radius);overflow:auto;background:rgba(255,255,255,.04);box-shadow:var(--shadow)}
+    .boardTop{padding:12px;border-bottom:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .filters{padding:12px;border-bottom:1px solid var(--border);display:flex;gap:14px;flex-wrap:wrap}
+    .fblock{border:1px solid var(--border);border-radius:14px;padding:10px 12px;background:rgba(255,255,255,.03);min-width:220px}
+    .ftitle{font-weight:950;font-size:12px;color:var(--muted);margin-bottom:8px}
+    .check{display:flex;gap:8px;align-items:center;font-size:13px;margin:5px 0}
+    canvas{width:100%;height:520px;display:block;background:
+      radial-gradient(700px 420px at 30% 40%, rgba(59,130,246,.12), transparent 60%),
+      radial-gradient(650px 420px at 70% 55%, rgba(168,85,247,.10), transparent 60%)}
+    .hint{padding:10px 12px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);background:rgba(255,255,255,.02)}
+    .panelHead{padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:rgba(15,23,42,.75);backdrop-filter:blur(10px)}
+    [data-theme="light"] .panelHead{background:rgba(255,255,255,.90)}
+    .panelBody{padding:12px}
+    .kv{display:grid;grid-template-columns:110px 1fr;gap:8px;font-size:13px}
+    .k{color:var(--muted);font-weight:950}
+    .eCard{border:1px solid var(--border);border-radius:14px;padding:12px;margin:10px 0;background:rgba(255,255,255,.03)}
+    .eTitle{font-weight:950;margin-bottom:4px} .eMeta{font-size:12px;color:var(--muted);margin-bottom:8px}
+    hr.sep{border:none;border-top:1px solid var(--border);margin:14px 0}
+    footer{border-top:1px solid var(--border);padding:16px 18px;color:var(--muted);margin-top:8px}
+    #toast{position:fixed;bottom:18px;right:18px;padding:10px 12px;border-radius:14px;border:1px solid var(--border);background:rgba(15,23,42,.85);box-shadow:var(--shadow);color:var(--text);z-index:999;display:none;font-weight:950}
+    dialog{width:min(900px,95vw);border:1px solid var(--border);border-radius:var(--radius);padding:0;background:var(--panel);color:var(--text);box-shadow:var(--shadow)}
+    dialog::backdrop{background:rgba(0,0,0,.6)}
+    .dlgHead{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .dlgBody{padding:12px 14px}
+    code{font-family:var(--mono)}
+  </style>
+</head>
+<body data-theme="dark">
+<header>
+  <div class="brand">
+    <div class="logo">CT</div>
+    <div>
+      <div class="title">Commission Tracker — Evidence Board</div>
+      <div class="subtitle">Hosted on Azure Static Web Apps • Evidence-linked UI • JSON-driven</div>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn" id="themeBtn">🌙 Theme</button>
+    <button class="btn" id="helpBtn">❓ Help</button>
+    <button class="btn" id="refreshBtn">🔄 Refresh data</button>
+    <button class="btn primary" id="boardJump">Open Evidence Board</button>
+  </div>
+</header>
+
+<nav>
+  <a class="tab active" href="#overview" data-tab="overview">Overview</a>
+  <a class="tab" href="#timeline" data-tab="timeline">Timeline</a>
+  <a class="tab" href="#people" data-tab="people">Entities</a>
+  <a class="tab" href="#sources" data-tab="sources">Sources</a>
+  <a class="tab" href="#board" data-tab="board">Evidence Board</a>
+</nav>
+
+<main>
+  <section id="overview" class="active">
+    <div class="card">
+      <div class="kicker" id="asOf">As-of: —</div>
+      <h1>Overview</h1>
+      <p class="muted">
+        This site is driven by a single JSON dataset (nodes, edges, timeline, and sources). It’s designed for evidence-first navigation.
+      </p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+        <span class="pill ok">confirmed</span>
+        <span class="pill warn">alleged</span>
+        <span class="pill bad">disputed</span>
+        <span class="badge official">✅ Official</span>
+        <span class="badge testimony">🧾 Testimony</span>
+        <span class="badge media">📰 Media</span>
+      </div>
+      <p class="muted" style="margin-top:10px">
+        Data file: <code>/data/latest.json</code> (fallback). If you add an API function, <code>/api/dataset</code> will override the static file.
+      </p>
+    </div>
+
+    <div class="grid-2" style="margin-top:16px">
+      <div class="card">
+        <h2>How updates work</h2>
+        <ol class="muted" style="margin:0;padding-left:18px">
+          <li>Commit an updated <code>data/latest.json</code> (simplest), or</li>
+          <li>Deploy an Azure Function at <code>/api/dataset</code> to serve JSON from your pipeline.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h2>Tip for accuracy</h2>
+        <p class="muted">Treat non-official sources as “reported” and label edges as alleged/disputed until confirmed by official documents.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="timeline">
+    <div class="card">
+      <div class="kicker">Timeline</div>
+      <h1>Timeline</h1>
+      <div class="toolbar">
+        <input id="tlSearch" placeholder="Search timeline…" />
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="chip active" data-tl="all">All</button>
+          <button class="chip" data-tl="official">Official</button>
+          <button class="chip" data-tl="testimony">Testimony</button>
+          <button class="chip" data-tl="media">Media</button>
+        </div>
+      </div>
+      <div id="tlList" class="timeline"></div>
+    </div>
+  </section>
+
+  <section id="people">
+    <div class="card">
+      <div class="kicker">Entities</div>
+      <h1>Entities</h1>
+      <div class="toolbar">
+        <input id="entSearch" placeholder="Search entities…" />
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="chip active" data-kind="all">All</button>
+          <button class="chip" data-kind="person">People</button>
+          <button class="chip" data-kind="org">Orgs</button>
+          <button class="chip" data-kind="event">Events</button>
+          <button class="chip" data-kind="evidence">Evidence</button>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div id="entList" class="list"></div>
+        <div id="entPanel" class="card"><h2>Details</h2><p class="muted">Select an entity from the list.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sources">
+    <div class="card">
+      <div class="kicker">Sources</div>
+      <h1>Sources</h1>
+      <div class="toolbar">
+        <input id="srcSearch" placeholder="Search sources…" />
+        <select id="srcTier">
+          <option value="all">All tiers</option>
+          <option value="official">Official</option>
+          <option value="testimony">Testimony</option>
+          <option value="media">Media</option>
+        </select>
+      </div>
+      <div id="srcList" class="grid-2"></div>
+      <hr class="sep"/>
+      <h2>Dataset schema</h2>
+      <pre class="card" style="overflow:auto;box-shadow:none"><code>{
+  "meta": { "asOf": "ISO-8601 string" },
+  "nodes": [
+    {"id":"node_id","kind":"person|org|event|evidence","label":"...","subtitle":"...","tags":["..."]}
+  ],
+  "edges": [
+    {"id":"edge_id","from":"node_id","to":"node_id","type":"relationship_type",
+     "strength":"official|testimony|media","status":"confirmed|alleged|disputed",
+     "evidenceIds":["source_id"],"explanation":"..."}
+  ],
+  "evidence": [
+    {"id":"source_id","title":"...","tier":"official|testimony|media","date":"YYYY-MM-DD",
+     "publisher":"...","url":"https://...","tags":["..."],"summary":"..."}
+  ],
+  "timeline": [
+    {"id":"tl_id","date":"YYYY-MM-DD","tier":"official|testimony|media","title":"...",
+     "summary":"...","sourceIds":["source_id"],"tags":["..."]}
+  ]
+}</code></pre>
+    </div>
+  </section>
+
+  <section id="board">
+    <div class="card">
+      <div class="kicker">Evidence Board</div>
+      <h1>Evidence Board (Interactive)</h1>
+      <p class="muted">Drag nodes • Pan/zoom • Click node for details • Use filters/search.</p>
+    </div>
+
+    <div class="board" style="margin-top:16px">
+      <div class="boardLeft">
+        <div class="boardTop">
+          <input id="gSearch" placeholder="Search nodes…" />
+          <button class="btn" id="gFocusBtn">🎯 Focus</button>
+          <button class="btn" id="gResetBtn">↩ Reset</button>
+        </div>
+        <div class="filters">
+          <div class="fblock">
+            <div class="ftitle">Node types</div>
+            <label class="check"><input type="checkbox" class="fk" value="person" checked> People</label>
+            <label class="check"><input type="checkbox" class="fk" value="org" checked> Orgs</label>
+            <label class="check"><input type="checkbox" class="fk" value="event" checked> Events</label>
+            <label class="check"><input type="checkbox" class="fk" value="evidence" checked> Evidence</label>
+          </div>
+          <div class="fblock">
+            <div class="ftitle">Edge status</div>
+            <label class="check"><input type="checkbox" class="fs" value="confirmed" checked> Confirmed</label>
+            <label class="check"><input type="checkbox" class="fs" value="alleged" checked> Alleged</label>
+            <label class="check"><input type="checkbox" class="fs" value="disputed" checked> Disputed</label>
+          </div>
+          <div class="fblock">
+            <div class="ftitle">Relationship</div>
+            <select id="relFilter"><option value="all">All</option></select>
+          </div>
+        </div>
+        <canvas id="graph" width="1200" height="520"></canvas>
+        <div class="hint"><strong>Tip:</strong> click a node, then press Focus to isolate it + neighbours.</div>
+      </div>
+
+      <div class="boardRight">
+        <div class="panelHead">
+          <div style="font-weight:950">Details</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn" id="pinBtn">📌 Pin</button>
+            <button class="btn" id="clearBtn">✖ Clear</button>
+          </div>
+        </div>
+        <div class="panelBody" id="panel">
+          <p class="muted">Click a node in the graph to view connections and supporting evidence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Azure Static Web Apps ready • Update <code>data/latest.json</code> or provide <code>/api/dataset</code>
+</footer>
+
+<div id="toast"></div>
+
+<dialog id="dlg">
+  <div class="dlgHead">
+    <div id="dlgTitle" style="font-weight:950">Details</div>
+    <button class="btn" id="dlgClose">Close</button>
+  </div>
+  <div class="dlgBody" id="dlgBody"></div>
+</dialog>
+
+<script>
+// ---------------------------
+// Data loading
+// Prefer /api/dataset if present; fall back to /data/latest.json
+// ---------------------------
+let DB = null;
+
+async function loadDataset(){
+  const tryUrls = ['/api/dataset', '/data/latest.json'];
+  for(const url of tryUrls){
+    try{
+      const r = await fetch(url, {cache:'no-store'});
+      if(!r.ok) continue;
+      const j = await r.json();
+      if(j && j.nodes && j.edges && j.evidence && j.timeline){
+        return j;
+      }
+    }catch(e){ /* ignore */ }
+  }
+  throw new Error('No dataset found.');
+}
+
+// ---------------------------
+// Helpers
+// ---------------------------
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc = (x)=>String(x).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
+const fmt = (iso)=>{ try{return new Date(iso).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"2-digit"});}catch{return iso;} };
+const badge = (tier)=> tier==="official" ? `<span class="badge official">✅ Official</span>` : tier==="testimony" ? `<span class="badge testimony">🧾 Testimony</span>` : `<span class="badge media">📰 Media</span>`;
+function kindLabel(k){return k==="person"?"Person":k==="org"?"Organisation":k==="event"?"Event":"Evidence";}
+function nodeById(id){return DB.nodes.find(n=>n.id===id);} 
+function srcById(id){return DB.evidence.find(e=>e.id===id);} 
+function connectionsFor(nodeId){
+  const edges = DB.edges.filter(e=>e.from===nodeId||e.to===nodeId);
+  const neighIds = new Set(edges.flatMap(e=>[e.from,e.to]).filter(x=>x!==nodeId));
+  const evIds = new Set(edges.flatMap(e=>e.evidenceIds||[]));
+  return {edges, neighbors:[...neighIds].map(nodeById).filter(Boolean), evidence:[...evIds].map(srcById).filter(Boolean)};
+}
+let toastTimer=null;
+function toast(msg){const t=$("#toast");t.textContent=msg;t.style.display="block";clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.style.display="none",1500);}
+
+// Dialog
+const dlg=$('#dlg');
+$('#dlgClose').addEventListener('click',()=>dlg.close());
+function openDialog(title, html){$('#dlgTitle').textContent=title;$('#dlgBody').innerHTML=html;dlg.showModal();}
+
+// Tabs
+function setTab(tabId){
+  $$('section').forEach(s=>s.classList.toggle('active', s.id===tabId));
+  $$('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tabId));
+  history.replaceState(null,'','#'+tabId);
+  if(tabId==='board') requestAnimationFrame(()=>graph.resizeToCanvas());
+}
+$$('.tab').forEach(t=>t.addEventListener('click',(e)=>{e.preventDefault();setTab(t.dataset.tab);}));
+$('#boardJump').addEventListener('click',()=>setTab('board'));
+
+// Theme + help
+$('#themeBtn').addEventListener('click',()=>{
+  const isLight=document.body.getAttribute('data-theme')==='light';
+  document.body.setAttribute('data-theme', isLight?'dark':'light');
+  $('#themeBtn').textContent=isLight?'🌙 Theme':'☀️ Theme';
+});
+$('#helpBtn').addEventListener('click',()=>{
+  alert('Controls:\n\nEvidence board: click node, drag node, pan, zoom.\nRefresh: reload /api/dataset then /data/latest.json.');
+});
+
+// Timeline
+let tlTier='all';
+function renderTimeline(){
+  const q=($('#tlSearch').value||'').toLowerCase().trim();
+  const items=DB.timeline
+    .filter(t=>tlTier==='all'?true:t.tier===tlTier)
+    .filter(t=>!q?true:(t.title+' '+t.summary+' '+(t.tags||[]).join(' ')).toLowerCase().includes(q))
+    .sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+  $('#tlList').innerHTML=items.map(t=>`
+    <div class="titem" data-id="${esc(t.id)}" title="Click to view sources">
+      <div class="tdate">${esc(fmt(t.date))}</div>
+      <div style="flex:1">
+        <div class="ttitle">${esc(t.title)} ${badge(t.tier)}</div>
+        <div class="muted">${esc(t.summary)}</div>
+        <div class="tags">${(t.tags||[]).map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div>
+      </div>
+    </div>
+  `).join('');
+
+  $$('#tlList .titem').forEach(el=>el.addEventListener('click',()=>{
+    const item=DB.timeline.find(x=>x.id===el.dataset.id); if(!item) return;
+    const srcCards=(item.sourceIds||[]).map(id=>srcById(id)).filter(Boolean).map(s=>`
+      <div class="eCard">
+        <div class="eTitle">${esc(s.title)}</div>
+        <div class="eMeta">${esc(s.publisher)} • ${esc(fmt(s.date))} • ${badge(s.tier)}</div>
+        <div class="muted">${esc(s.summary||'')}</div>
+        <div style="margin-top:8px"><a href="${esc(s.url)}" target="_blank" rel="noreferrer">Open source</a></div>
+      </div>
+    `).join('');
+    openDialog(item.title, srcCards || '<p class="muted">No sources linked.</p>');
+  }));
+}
+$$('[data-tl]').forEach(btn=>btn.addEventListener('click',()=>{
+  $$('[data-tl]').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  tlTier=btn.dataset.tl; renderTimeline();
+}));
+$('#tlSearch').addEventListener('input',()=>DB && renderTimeline());
+
+// Entities
+let entKind='all';
+function renderEntities(){
+  const q=($('#entSearch').value||'').toLowerCase().trim();
+  const list=DB.nodes
+    .filter(n=>entKind==='all'?true:n.kind===entKind)
+    .filter(n=>!q?true:(n.label+' '+(n.subtitle||'')+' '+(n.tags||[]).join(' ')).toLowerCase().includes(q))
+    .sort((a,b)=>a.label.localeCompare(b.label));
+
+  $('#entList').innerHTML=list.map(n=>`
+    <div class="litem" data-id="${esc(n.id)}">
+      <div class="ltitle">${esc(n.label)}</div>
+      <div class="lsub">${esc(kindLabel(n.kind))} • ${esc(n.subtitle||'')}</div>
+    </div>
+  `).join('');
+
+  $$('#entList .litem').forEach(el=>el.addEventListener('click',()=>renderEntityPanel(el.dataset.id)));
+}
+function renderEntityPanel(id){
+  const n=nodeById(id); if(!n) return;
+  const c=connectionsFor(id);
+  const edgesHtml=c.edges.map(e=>{const other=nodeById(e.from===id?e.to:e.from);
+    return `<div class="eCard"><div class="eTitle">${esc(e.type)} → ${esc(other?other.label:(e.from===id?e.to:e.from))}</div>
+      <div class="eMeta">${esc(e.strength)} • ${esc(e.status)}</div><div class="muted">${esc(e.explanation||'')}</div></div>`;
+  }).join('');
+  const evHtml=c.evidence.map(s=>`
+    <div class="eCard"><div class="eTitle">${esc(s.title)}</div>
+      <div class="eMeta">${esc(s.publisher)} • ${esc(fmt(s.date))} • ${badge(s.tier)}</div>
+      <div class="muted">${esc(s.summary||'')}</div>
+      <div style="margin-top:8px"><a href="${esc(s.url)}" target="_blank" rel="noreferrer">Open source</a></div></div>
+  `).join('');
+  $('#entPanel').innerHTML=`
+    <h2>${esc(n.label)}</h2>
+    <div class="kv" style="margin-top:10px">
+      <div class="k">Type</div><div>${esc(kindLabel(n.kind))}</div>
+      <div class="k">Subtitle</div><div>${esc(n.subtitle||'-')}</div>
+      <div class="k">Tags</div><div>${(n.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')||'-'}</div>
+    </div>
+    <hr class="sep"/>
+    <h3 style="margin:0 0 6px">Connections</h3>
+    ${edgesHtml||'<p class="muted">No connections yet.</p>'}
+    <hr class="sep"/>
+    <h3 style="margin:0 0 6px">Supporting sources</h3>
+    ${evHtml||'<p class="muted">No sources linked.</p>'}
+  `;
+}
+$$('[data-kind]').forEach(btn=>btn.addEventListener('click',()=>{
+  $$('[data-kind]').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  entKind=btn.dataset.kind; renderEntities();
+}));
+$('#entSearch').addEventListener('input',()=>DB && renderEntities());
+
+// Sources
+function renderSources(){
+  const q=($('#srcSearch').value||'').toLowerCase().trim();
+  const tier=$('#srcTier').value;
+  const list=DB.evidence
+    .filter(s=>tier==='all'?true:s.tier===tier)
+    .filter(s=>!q?true:(s.title+' '+s.publisher+' '+(s.tags||[]).join(' ')+' '+(s.summary||'')).toLowerCase().includes(q))
+    .sort((a,b)=>new Date(b.date)-new Date(a.date));
+  $('#srcList').innerHTML=list.map(s=>`
+    <div class="card">
+      <div class="kicker">${esc(s.publisher)} • ${esc(fmt(s.date))}</div>
+      <h2 style="margin-top:10px">${esc(s.title)} ${badge(s.tier)}</h2>
+      <p class="muted">${esc(s.summary||'')}</p>
+      <div class="tags">${(s.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
+      <div style="margin-top:12px"><a href="${esc(s.url)}" target="_blank" rel="noreferrer">Open source</a></div>
+    </div>
+  `).join('');
+}
+$('#srcSearch').addEventListener('input',()=>DB && renderSources());
+$('#srcTier').addEventListener('change',()=>DB && renderSources());
+
+// Evidence board (canvas force layout)
+const graph = (()=>{
+  const canvas=$('#graph');
+  const ctx=canvas.getContext('2d');
+  let W=canvas.width,H=canvas.height;
+  let nodes=[],edges=[];
+  let cam={x:0,y:0,z:1};
+  let isPanning=false,lastPan={x:0,y:0};
+  let selected=null,pinned=null,draggingNode=null,dragOff={x:0,y:0};
+  let showKinds=new Set(['person','org','event','evidence']);
+  let showStatus=new Set(['confirmed','alleged','disputed']);
+  let relType='all';
+  let focusMode=false;
+  let searchQ='';
+
+  function css(name){return getComputedStyle(document.body).getPropertyValue(name).trim();}
+  function colorForKind(kind){if(kind==='person')return css('--green');if(kind==='org')return css('--purple');if(kind==='event')return css('--red');return css('--amber');}
+  function radiusForKind(kind){if(kind==='org')return 22;if(kind==='evidence')return 20;return 18;}
+
+  function init(){
+    nodes=DB.nodes.map(n=>({...n,x:(Math.random()*0.8+0.1)*W,y:(Math.random()*0.8+0.1)*H,vx:0,vy:0,r:radiusForKind(n.kind)}));
+    edges=DB.edges.map(e=>({...e}));
+    populateRelFilter();
+    bindUI();
+    resizeToCanvas();
+    requestAnimationFrame(loop);
+  }
+
+  function populateRelFilter(){
+    const types=Array.from(new Set(edges.map(e=>e.type))).sort();
+    $('#relFilter').innerHTML=`<option value="all">All</option>`+types.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
+  }
+
+  function bindUI(){
+    $('#gSearch').addEventListener('input',(e)=>{searchQ=e.target.value.toLowerCase().trim();});
+    $('#gResetBtn').addEventListener('click',()=>{focusMode=false;selected=null;pinned=null;searchQ='';$('#gSearch').value='';
+      showKinds=new Set(['person','org','event','evidence']);showStatus=new Set(['confirmed','alleged','disputed']);
+      $$('.fk').forEach(cb=>cb.checked=true);$$('.fs').forEach(cb=>cb.checked=true);
+      $('#relFilter').value='all';relType='all';cam={x:0,y:0,z:1};toast('Reset');renderPanel(null);
+    });
+    $('#gFocusBtn').addEventListener('click',()=>{const base=pinned||selected;if(!base){toast('Select a node first');return;}focusMode=!focusMode;toast(focusMode?'Focus ON':'Focus OFF');});
+    $('#relFilter').addEventListener('change',(e)=>{relType=e.target.value;});
+    $$('.fk').forEach(cb=>cb.addEventListener('change',()=>{showKinds=new Set($$('.fk').filter(x=>x.checked).map(x=>x.value));}));
+    $$('.fs').forEach(cb=>cb.addEventListener('change',()=>{showStatus=new Set($$('.fs').filter(x=>x.checked).map(x=>x.value));}));
+
+    $('#pinBtn').addEventListener('click',()=>{if(!selected){toast('Select a node');return;}pinned=(pinned&&pinned.id===selected.id)?null:selected;toast(pinned?'Pinned':'Unpinned');renderPanel(selected);});
+    $('#clearBtn').addEventListener('click',()=>{selected=null;pinned=null;focusMode=false;renderPanel(null);toast('Cleared');});
+
+    canvas.addEventListener('mousedown',onDown);
+    canvas.addEventListener('mousemove',onMove);
+    canvas.addEventListener('mouseup',onUp);
+    canvas.addEventListener('mouseleave',onUp);
+    canvas.addEventListener('wheel',onWheel,{passive:false});
+    window.addEventListener('resize',resizeToCanvas);
+  }
+
+  function toWorld(px,py){return {x:(px-W/2)/cam.z-cam.x+W/2, y:(py-H/2)/cam.z-cam.y+H/2};}
+  function toScreen(wx,wy){return {x:((wx-W/2+cam.x)*cam.z)+W/2, y:((wy-H/2+cam.y)*cam.z)+H/2};}
+
+  function neighborIds(id){
+    const set=new Set();
+    edges.forEach(e=>{if(!showStatus.has(e.status))return;if(relType!=='all'&&e.type!==relType)return;if(e.from===id)set.add(e.to);if(e.to===id)set.add(e.from);});
+    return set;
+  }
+
+  function isNodeVisible(n){
+    if(!showKinds.has(n.kind))return false;
+    if(searchQ){const hay=(n.label+' '+(n.subtitle||'')+' '+(n.tags||[]).join(' ')).toLowerCase();if(!hay.includes(searchQ))return false;}
+    if(focusMode){const base=pinned||selected;if(!base)return true;if(n.id===base.id)return true;return neighborIds(base.id).has(n.id);} 
+    return true;
+  }
+  function isEdgeVisible(e){
+    if(!showStatus.has(e.status))return false;
+    if(relType!=='all'&&e.type!==relType)return false;
+    const a=nodes.find(n=>n.id===e.from), b=nodes.find(n=>n.id===e.to);
+    if(!a||!b)return false;
+    return isNodeVisible(a)&&isNodeVisible(b);
+  }
+
+  function hitTest(px,py){
+    const w=toWorld(px,py);
+    for(let i=nodes.length-1;i>=0;i--){const n=nodes[i];if(!isNodeVisible(n))continue;const dx=w.x-n.x,dy=w.y-n.y; if(Math.sqrt(dx*dx+dy*dy)<=n.r)return n;}
+    return null;
+  }
+
+  function onDown(e){
+    const rect=canvas.getBoundingClientRect();
+    const x=e.clientX-rect.left, y=e.clientY-rect.top;
+    const hit=hitTest(x,y);
+    if(hit){selected=hit;draggingNode=hit;const w=toWorld(x,y);dragOff={x:hit.x-w.x,y:hit.y-w.y};renderPanel(selected);toast('Selected: '+hit.label);} 
+    else {isPanning=true;lastPan={x,y};}
+  }
+  function onMove(e){
+    const rect=canvas.getBoundingClientRect();
+    const x=e.clientX-rect.left, y=e.clientY-rect.top;
+    if(draggingNode){const w=toWorld(x,y);draggingNode.x=w.x+dragOff.x;draggingNode.y=w.y+dragOff.y;draggingNode.vx=0;draggingNode.vy=0;}
+    else if(isPanning){const dx=x-lastPan.x, dy=y-lastPan.y;cam.x+=dx/cam.z;cam.y+=dy/cam.z;lastPan={x,y};}
+  }
+  function onUp(){isPanning=false;draggingNode=null;}
+  function onWheel(e){e.preventDefault();const delta=Math.sign(e.deltaY);const factor=delta>0?0.92:1.08;cam.z=Math.min(2.2,Math.max(0.55,cam.z*factor));}
+
+  function physics(){
+    const kRepel=1600, kSpring=0.006, springLen=155, damping=0.86, centerPull=0.0014;
+    for(let i=0;i<nodes.length;i++){
+      const a=nodes[i]; if(!isNodeVisible(a)) continue;
+      for(let j=i+1;j<nodes.length;j++){
+        const b=nodes[j]; if(!isNodeVisible(b)) continue;
+        let dx=a.x-b.x, dy=a.y-b.y;
+        let dist2=dx*dx+dy*dy+0.01;
+        let f=kRepel/dist2;
+        let inv=1/Math.sqrt(dist2);
+        dx*=inv; dy*=inv;
+        a.vx+=dx*f; a.vy+=dy*f;
+        b.vx-=dx*f; b.vy-=dy*f;
+      }
+    }
+    edges.forEach(e=>{
+      if(!isEdgeVisible(e))return;
+      const a=nodes.find(n=>n.id===e.from), b=nodes.find(n=>n.id===e.to);
+      if(!a||!b)return;
+      let dx=b.x-a.x, dy=b.y-a.y;
+      let dist=Math.sqrt(dx*dx+dy*dy)+0.001;
+      let diff=dist-springLen;
+      let f=kSpring*diff;
+      dx/=dist; dy/=dist;
+      a.vx+=dx*f; a.vy+=dy*f;
+      b.vx-=dx*f; b.vy-=dy*f;
+    });
+    nodes.forEach(n=>{
+      if(!isNodeVisible(n)) return;
+      n.vx += (W/2 - n.x)*centerPull;
+      n.vy += (H/2 - n.y)*centerPull;
+      n.vx *= damping; n.vy *= damping;
+      n.x += n.vx; n.y += n.vy;
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    edges.forEach(e=>{
+      if(!isEdgeVisible(e))return;
+      const a=nodes.find(n=>n.id===e.from), b=nodes.find(n=>n.id===e.to);
+      if(!a||!b)return;
+      const A=toScreen(a.x,a.y), B=toScreen(b.x,b.y);
+      ctx.lineWidth=2;
+      ctx.setLineDash(e.strength==='media'?[8,6]:e.strength==='testimony'?[2,6]:[]);
+      ctx.strokeStyle=e.status==='confirmed'?'rgba(34,197,94,.75)':e.status==='alleged'?'rgba(245,158,11,.82)':'rgba(239,68,68,.82)';
+      ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.stroke();
+      const ang=Math.atan2(B.y-A.y,B.x-A.x), ah=8;
+      ctx.fillStyle=ctx.strokeStyle;
+      ctx.beginPath();
+      ctx.moveTo(B.x,B.y);
+      ctx.lineTo(B.x-ah*Math.cos(ang-0.35), B.y-ah*Math.sin(ang-0.35));
+      ctx.lineTo(B.x-ah*Math.cos(ang+0.35), B.y-ah*Math.sin(ang+0.35));
+      ctx.closePath(); ctx.fill();
+    });
+    ctx.setLineDash([]);
+    nodes.forEach(n=>{
+      if(!isNodeVisible(n))return;
+      const p=toScreen(n.x,n.y);
+      const isSel=selected&&selected.id===n.id;
+      const isPin=pinned&&pinned.id===n.id;
+      if(isSel||isPin){ctx.beginPath();ctx.arc(p.x,p.y,(n.r+9)*cam.z,0,Math.PI*2);ctx.fillStyle=isPin?'rgba(34,211,238,.18)':'rgba(96,165,250,.12)';ctx.fill();}
+      ctx.beginPath(); ctx.arc(p.x,p.y,n.r*cam.z,0,Math.PI*2); ctx.fillStyle=colorForKind(n.kind); ctx.fill();
+      ctx.lineWidth=2; ctx.strokeStyle='rgba(255,255,255,.18)'; ctx.stroke();
+      ctx.font=`${Math.max(11, 11*cam.z)}px system-ui`; ctx.fillStyle='rgba(229,231,235,.95)';
+      ctx.textAlign='center'; ctx.textBaseline='top';
+      ctx.fillText(n.label, p.x, p.y+(n.r+7)*cam.z);
+    });
+  }
+
+  function loop(){physics();draw();requestAnimationFrame(loop);}
+
+  function resizeToCanvas(){
+    const rect=canvas.getBoundingClientRect();
+    canvas.width=Math.floor(rect.width*devicePixelRatio);
+    canvas.height=Math.floor(rect.height*devicePixelRatio);
+    W=canvas.width; H=canvas.height;
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  }
+
+  function renderPanel(node){
+    if(!node){$('#panel').innerHTML='<p class="muted">Click a node in the graph to view connections and supporting evidence.</p>';return;}
+    const c=connectionsFor(node.id);
+    const conHtml=c.edges.filter(isEdgeVisible).map(e=>{const other=nodeById(e.from===node.id?e.to:e.from);
+      return `<div class="eCard"><div class="eTitle">${esc(e.type)} → ${esc(other?other.label:(e.from===node.id?e.to:e.from))}</div>
+      <div class="eMeta">${esc(e.strength)} • ${esc(e.status)}</div><div class="muted">${esc(e.explanation||'')}</div></div>`;
+    }).join('');
+    const evIds=new Set(c.edges.flatMap(e=>e.evidenceIds||[]));
+    const evHtml=[...evIds].map(srcById).filter(Boolean).map(s=>`
+      <div class="eCard"><div class="eTitle">${esc(s.title)}</div>
+      <div class="eMeta">${esc(s.publisher)} • ${esc(fmt(s.date))} • ${badge(s.tier)}</div>
+      <div class="muted">${esc(s.summary||'')}</div>
+      <div style="margin-top:8px"><a href="${esc(s.url)}" target="_blank" rel="noreferrer">Open source</a></div></div>
+    `).join('');
+    $('#panel').innerHTML=`
+      <div class="kv">
+        <div class="k">Label</div><div><strong>${esc(node.label)}</strong></div>
+        <div class="k">Type</div><div>${esc(kindLabel(node.kind))}</div>
+        <div class="k">Subtitle</div><div>${esc(node.subtitle||'-')}</div>
+        <div class="k">Tags</div><div>${(node.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')||'-'}</div>
+      </div>
+      <hr class="sep"/>
+      <h3 style="margin:0 0 6px">Connections</h3>
+      ${conHtml||'<p class="muted">No visible connections under current filters.</p>'}
+      <hr class="sep"/>
+      <h3 style="margin:0 0 6px">Supporting evidence</h3>
+      ${evHtml||'<p class="muted">No evidence linked.</p>'}
+    `;
+  }
+
+  return { init, resizeToCanvas, renderPanel };
+})();
+
+// Refresh / init
+$('#refreshBtn').addEventListener('click', async ()=>{
+  try{
+    toast('Refreshing…');
+    DB = await loadDataset();
+    boot();
+    toast('Updated');
+  }catch(e){
+    console.error(e);
+    toast('Refresh failed');
+  }
+});
+
+function boot(){
+  $('#asOf').textContent = 'As-of: ' + (DB.meta?.asOf || '—');
+  renderTimeline();
+  renderEntities();
+  renderSources();
+  requestAnimationFrame(()=>graph.init());
+}
+
+(async function start(){
+  const h=(location.hash||'#overview').slice(1);
+  const known=['overview','timeline','people','sources','board'].includes(h);
+  setTab(known?h:'overview');
+
+  try{
+    toast('Loading…');
+    DB = await loadDataset();
+    boot();
+    toast('Ready');
+  }catch(err){
+    console.error(err);
+    openDialog('Dataset missing', '<p class="muted">No dataset could be loaded. Add <code>data/latest.json</code> or deploy an API at <code>/api/dataset</code>.</p>');
+  }
+})();
+</script>
+</body>
+</html>

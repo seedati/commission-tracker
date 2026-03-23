@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "asOf": "2026-03-23T00:00:00Z"
+  },
+  "nodes": [
+    {
+      "id": "org_commission",
+      "kind": "org",
+      "label": "Commission",
+      "subtitle": "Commission of inquiry",
+      "tags": [
+        "commission"
+      ]
+    },
+    {
+      "id": "person_chair",
+      "kind": "person",
+      "label": "Chairperson",
+      "subtitle": "Commission chair",
+      "tags": [
+        "chair"
+      ]
+    },
+    {
+      "id": "event_hearing",
+      "kind": "event",
+      "label": "Hearing Day 1",
+      "subtitle": "Opening day",
+      "tags": [
+        "hearing"
+      ]
+    },
+    {
+      "id": "src_notice",
+      "kind": "evidence",
+      "label": "Official notice",
+      "subtitle": "Schedule notice",
+      "tags": [
+        "official"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "from": "org_commission",
+      "to": "person_chair",
+      "type": "chaired_by",
+      "strength": "official",
+      "status": "confirmed",
+      "evidenceIds": [
+        "ev_official"
+      ],
+      "explanation": "Officially appointed chair."
+    },
+    {
+      "id": "e2",
+      "from": "org_commission",
+      "to": "event_hearing",
+      "type": "commenced",
+      "strength": "official",
+      "status": "confirmed",
+      "evidenceIds": [
+        "ev_official"
+      ],
+      "explanation": "Proceedings commenced."
+    },
+    {
+      "id": "e3",
+      "from": "src_notice",
+      "to": "event_hearing",
+      "type": "documents",
+      "strength": "official",
+      "status": "confirmed",
+      "evidenceIds": [
+        "ev_official"
+      ],
+      "explanation": "Notice documents the hearing."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_official",
+      "title": "Official statement (placeholder)",
+      "tier": "official",
+      "date": "2026-03-01",
+      "publisher": "Official Publisher",
+      "url": "https://example.com",
+      "tags": [
+        "official"
+      ],
+      "summary": "Replace with your official sources."
+    }
+  ],
+  "timeline": [
+    {
+      "id": "t1",
+      "date": "2026-03-01",
+      "tier": "official",
+      "title": "Official notice published",
+      "summary": "Placeholder timeline item.",
+      "sourceIds": [
+        "ev_official"
+      ],
+      "tags": [
+        "official"
+      ]
+    }
+  ]
+}

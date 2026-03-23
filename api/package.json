@@ -1,0 +1,9 @@
+{
+  "name": "commission-tracker-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "@azure/functions": "^4.0.0"
+  }
+}
