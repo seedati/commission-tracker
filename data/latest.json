@@ -173,6 +173,130 @@
         "ev_timeslive"
       ],
       "explanation": "Live coverage and reporting of testimony on 23 March 2026."
+    },
+    {
+      "id": "e_p_mkhwanazi_mchunu",
+      "from": "person_nhlanhla_mkhwanazi",
+      "to": "person_senzo_mchunu",
+      "type": "alleges_influence",
+      "strength": "reported",
+      "status": "alleged",
+      "evidenceIds": [
+        "ev_corruptionwatch"
+      ],
+      "explanation": "Mkhwanazi testified that Mchunu may have been influenced by external actors."
+    },
+    {
+      "id": "e_p_mkhwanazi_matlala",
+      "from": "person_nhlanhla_mkhwanazi",
+      "to": "person_vusimusi_matlala",
+      "type": "names",
+      "strength": "reported",
+      "status": "named",
+      "evidenceIds": [
+        "ev_corruptionwatch"
+      ],
+      "explanation": "Matlala was named during Mkhwanazi's testimony and referenced in related searches and operations."
+    },
+    {
+      "id": "e_p_mkhwanazi_mogotsi",
+      "from": "person_nhlanhla_mkhwanazi",
+      "to": "person_brown_mogotsi",
+      "type": "names",
+      "strength": "reported",
+      "status": "named",
+      "evidenceIds": [
+        "ev_corruptionwatch",
+        "ev_iol_mchunu"
+      ],
+      "explanation": "Mogotsi's messages and relationship were discussed in testimony."
+    },
+    {
+      "id": "e_p_matlala_mogotsi",
+      "from": "person_vusimusi_matlala",
+      "to": "person_brown_mogotsi",
+      "type": "associated_with",
+      "strength": "reported",
+      "status": "reported",
+      "evidenceIds": [
+        "ev_corruptionwatch"
+      ],
+      "explanation": "Matlala and Mogotsi were referenced together in testimony and investigations."
+    },
+    {
+      "id": "e_p_matlala_swart",
+      "from": "person_vusimusi_matlala",
+      "to": "person_armand_swart",
+      "type": "investigated_in",
+      "strength": "reported",
+      "status": "related",
+      "evidenceIds": [
+        "ev_news24_swart",
+        "ev_corruptionwatch"
+      ],
+      "explanation": "Matlala's property was searched during investigations connected to the Swart killing referenced in testimony."
+    },
+    {
+      "id": "e_p_mchunu_mogotsi_ack",
+      "from": "person_senzo_mchunu",
+      "to": "person_brown_mogotsi",
+      "type": "acknowledged_relationship",
+      "strength": "reported",
+      "status": "confirmed",
+      "evidenceIds": [
+        "ev_iol_mchunu"
+      ],
+      "explanation": "Mchunu later confirmed knowing Mogotsi after earlier denial, as reported."
+    },
+    {
+      "id": "e_p_sibiya_dockets",
+      "from": "person_shadrack_sibiya",
+      "to": "org_madlanga",
+      "type": "dockets_transfer_related",
+      "strength": "reported",
+      "status": "alleged",
+      "evidenceIds": [
+        "ev_corruptionwatch"
+      ],
+      "explanation": "Transfers of case dockets to Sibiya's office were discussed in testimony."
+    },
+    {
+      "id": "e_p_joe_sibanyoni_mentioned",
+      "from": "person_joe_sibanyoni",
+      "to": "event_fannie_nkosi_2026_03_23",
+      "type": "mentioned_in",
+      "strength": "reported",
+      "status": "mentioned",
+      "evidenceIds": [
+        "ev_sabc",
+        "ev_timeslive"
+      ],
+      "explanation": "Joe Sibanyoni was referenced in testimony reported during hearings."
+    },
+    {
+      "id": "e_p_mdluli_mentioned",
+      "from": "person_richard_mdluli",
+      "to": "person_nhlanhla_mkhwanazi",
+      "type": "mentioned_withdrawals",
+      "strength": "reported",
+      "status": "mentioned",
+      "evidenceIds": [
+        "ev_corruptionwatch"
+      ],
+      "explanation": "Withdrawals of charges and references to Mdluli were discussed in testimony."
+    },
+    {
+      "id": "e_p_swart_case",
+      "from": "person_armand_swart",
+      "to": "person_nhlanhla_mkhwanazi",
+      "type": "case_related",
+      "strength": "reported",
+      "status": "related",
+      "evidenceIds": [
+        "ev_news24_swart",
+        "ev_corruptionwatch"
+      ],
+      "explanation": "The killing of Armand Swart was presented in testimony as linked to investigations discussed by Mkhwanazi."
     }
   ],
   "evidence": [
