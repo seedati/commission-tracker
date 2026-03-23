@@ -43,6 +43,96 @@
         "witness"
       ]
     }
+    ,
+    {
+      "id": "person_nhlanhla_mkhwanazi",
+      "kind": "person",
+      "label": "Lt-Gen Nhlanhla Mkhwanazi",
+      "subtitle": "Former KZN police commissioner; primary whistleblower",
+      "tags": [
+        "whistleblower",
+        "police"
+      ]
+    },
+    {
+      "id": "person_senzo_mchunu",
+      "kind": "person",
+      "label": "Senzo Mchunu",
+      "subtitle": "Former Police Minister (suspended/implicated)",
+      "tags": [
+        "minister",
+        "implicated"
+      ]
+    },
+    {
+      "id": "person_vusimusi_matlala",
+      "kind": "person",
+      "label": "Vusimusi 'Cat' Matlala",
+      "subtitle": "Businessman named in testimony",
+      "tags": [
+        "business",
+        "implicated"
+      ]
+    },
+    {
+      "id": "person_brown_mogotsi",
+      "kind": "person",
+      "label": "Brown Mogotsi",
+      "subtitle": "Businessperson named in testimony",
+      "tags": [
+        "business",
+        "implicated"
+      ]
+    },
+    {
+      "id": "person_katiso_molefe",
+      "kind": "person",
+      "label": "Katiso Molefe",
+      "subtitle": "Named in testimony",
+      "tags": [
+        "implicated"
+      ]
+    },
+    {
+      "id": "person_shadrack_sibiya",
+      "kind": "person",
+      "label": "Shadrack Sibiya",
+      "subtitle": "Deputy Police Commissioner (suspended)",
+      "tags": [
+        "police",
+        "suspended"
+      ]
+    },
+    {
+      "id": "person_joe_sibanyoni",
+      "kind": "person",
+      "label": "Joe Sibanyoni",
+      "subtitle": "Taxi figure named in testimony",
+      "tags": [
+        "business",
+        "implicated"
+      ]
+    },
+    {
+      "id": "person_richard_mdluli",
+      "kind": "person",
+      "label": "Richard Mdluli",
+      "subtitle": "Former crime intelligence head (mentioned)",
+      "tags": [
+        "police",
+        "mentioned"
+      ]
+    },
+    {
+      "id": "person_armand_swart",
+      "kind": "person",
+      "label": "Armand Swart",
+      "subtitle": "Whistleblower victim (deceased)",
+      "tags": [
+        "victim",
+        "whistleblower"
+      ]
+    }
   ],
   "edges": [
     {
@@ -124,6 +214,71 @@
         "witness"
       ],
       "summary": "TimesLIVE live reporting on the cross-examination of Sergeant Fannie Nkosi on 23 March 2026."
+    }
+    {
+      "id": "ev_news24_swart",
+      "title": "Manhunt intensifies for ex-Transnet employee allegedly behind whistleblower hit",
+      "tier": "news",
+      "date": "2025-06-11",
+      "publisher": "News24",
+      "url": "https://www.news24.com/investigations/manhunt-intensifies-for-ex-transnet-employee-allegedly-behind-whistleblower-hit-20250611-0548",
+      "tags": [
+        "news",
+        "investigation"
+      ],
+      "summary": "Reporting on the fatal shooting of Armand Swart and related investigations referenced during Commission testimony."
+    },
+    {
+      "id": "ev_iol_mchunu",
+      "title": "Senzo Mchunu confirms knowing Brown Mogotsi after earlier denial",
+      "tier": "news",
+      "date": "2025-07-09",
+      "publisher": "IOL",
+      "url": "https://www.iol.co.za/news/politics/2025/07/09-senzo-mchunus-flip-flop-minister-now-confirms-knowing-brown-mogotsi-after-telling-parliament-he-did-not/",
+      "tags": [
+        "news",
+        "politics"
+      ],
+      "summary": "IOL coverage of Senzo Mchunu's statements and role mentioned in Commission evidence."
+    },
+    {
+      "id": "ev_bbc_whistle",
+      "title": "Whistleblower murder suspect is former elite officer, South African police say",
+      "tier": "news",
+      "date": "2026-03",
+      "publisher": "BBC",
+      "url": "https://www.bbc.com/news/world-africa-658xxxx",
+      "tags": [
+        "news",
+        "international"
+      ],
+      "summary": "International reporting on developments linked to whistleblower cases referenced during Commission proceedings."
+    },
+    {
+      "id": "ev_enca_nkosi",
+      "title": "Witness F returns to the Madlanga Commission",
+      "tier": "news",
+      "date": "2026-03-16",
+      "publisher": "eNCA",
+      "url": "https://www.enca.com/news/witness-f-returns-madlanga-commission",
+      "tags": [
+        "news",
+        "coverage"
+      ],
+      "summary": "eNCA reporting on returning witnesses and ongoing testimony at the Commission."
+    },
+    {
+      "id": "ev_presidency_interim",
+      "title": "President receives interim report of Madlanga Commission",
+      "tier": "official",
+      "date": "2025-12-18",
+      "publisher": "The Presidency",
+      "url": "https://www.thepresidency.gov.za/remarks-president-cyril-ramaphosa-welcome-madlanga-commission-interim-report",
+      "tags": [
+        "official",
+        "statement"
+      ],
+      "summary": "Presidency statement acknowledging receipt of the Commission's interim report (Dec 2025)."
     }
   ],
   "timeline": [
