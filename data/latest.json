@@ -4,106 +4,186 @@
   },
   "nodes": [
     {
-      "id": "org_commission",
+      "id": "org_madlanga",
       "kind": "org",
-      "label": "Commission",
-      "subtitle": "Commission of inquiry",
+      "label": "Madlanga Commission",
+      "subtitle": "Commission of Inquiry into Criminality, Political Interference and Corruption in the Criminal Justice System",
       "tags": [
-        "commission"
-      ]
-    },
-    {
-      "id": "person_chair",
-      "kind": "person",
-      "label": "Chairperson",
-      "subtitle": "Commission chair",
-      "tags": [
-        "chair"
-      ]
-    },
-    {
-      "id": "event_hearing",
-      "kind": "event",
-      "label": "Hearing Day 1",
-      "subtitle": "Opening day",
-      "tags": [
-        "hearing"
-      ]
-    },
-    {
-      "id": "src_notice",
-      "kind": "evidence",
-      "label": "Official notice",
-      "subtitle": "Schedule notice",
-      "tags": [
+        "commission",
         "official"
+      ]
+    },
+    {
+      "id": "person_mbuyiseli_madlanga",
+      "kind": "person",
+      "label": "Mbuyiseli Madlanga",
+      "subtitle": "Chairperson (retired Justice)",
+      "tags": [
+        "chair",
+        "judge"
+      ]
+    },
+    {
+      "id": "event_hearings_start",
+      "kind": "event",
+      "label": "Hearings Commence",
+      "subtitle": "Opening hearings (17 Sep 2025)",
+      "tags": [
+        "hearing",
+        "start"
+      ]
+    },
+    {
+      "id": "event_fannie_nkosi_2026_03_23",
+      "kind": "event",
+      "label": "Fannie Nkosi testimony",
+      "subtitle": "Testimony and cross-examination (23 Mar 2026)",
+      "tags": [
+        "hearing",
+        "witness"
       ]
     }
   ],
   "edges": [
     {
       "id": "e1",
-      "from": "org_commission",
-      "to": "person_chair",
+      "from": "org_madlanga",
+      "to": "person_mbuyiseli_madlanga",
       "type": "chaired_by",
       "strength": "official",
       "status": "confirmed",
       "evidenceIds": [
-        "ev_official"
+        "ev_corruptionwatch",
+        "ev_sabc"
       ],
-      "explanation": "Officially appointed chair."
+      "explanation": "Commission chaired by retired Justice Mbuyiseli Madlanga (widely reported)."
     },
     {
       "id": "e2",
-      "from": "org_commission",
-      "to": "event_hearing",
+      "from": "org_madlanga",
+      "to": "event_hearings_start",
       "type": "commenced",
-      "strength": "official",
+      "strength": "reported",
       "status": "confirmed",
       "evidenceIds": [
-        "ev_official"
+        "ev_corruptionwatch",
+        "ev_sabc"
       ],
-      "explanation": "Proceedings commenced."
+      "explanation": "Hearings commenced 17 Sep 2025, reporting and summaries available in news coverage."
     },
     {
       "id": "e3",
-      "from": "src_notice",
-      "to": "event_hearing",
-      "type": "documents",
-      "strength": "official",
+      "from": "event_fannie_nkosi_2026_03_23",
+      "to": "org_madlanga",
+      "type": "occurred_at",
+      "strength": "reported",
       "status": "confirmed",
       "evidenceIds": [
-        "ev_official"
+        "ev_sabc",
+        "ev_timeslive"
       ],
-      "explanation": "Notice documents the hearing."
+      "explanation": "Live coverage and reporting of testimony on 23 March 2026."
     }
   ],
   "evidence": [
     {
-      "id": "ev_official",
-      "title": "Official statement (placeholder)",
-      "tier": "official",
-      "date": "2026-03-01",
-      "publisher": "Official Publisher",
-      "url": "https://example.com",
+      "id": "ev_sabc",
+      "title": "LIVE: Madlanga Commission of Inquiry | 23 March 2026",
+      "tier": "news",
+      "date": "2026-03-23",
+      "publisher": "SABC News",
+      "url": "https://www.sabcnews.com/sabcnews/live-madlanga-commission-of-inquiry-23-march-2026/",
       "tags": [
-        "official"
+        "news",
+        "live"
       ],
-      "summary": "Replace with your official sources."
+      "summary": "SABC live coverage and reporting of the Madlanga Commission hearings and witness testimony (23 March 2026)."
+    },
+    {
+      "id": "ev_corruptionwatch",
+      "title": "The Madlanga Commission’s first week: a brief summary",
+      "tier": "news",
+      "date": "2025-09-22",
+      "publisher": "Corruption Watch",
+      "url": "https://www.corruptionwatch.org.za/the-madlanga-commissions-first-week-a-brief-summary/",
+      "tags": [
+        "news",
+        "analysis"
+      ],
+      "summary": "Summary of the Commission's opening week, including testimony from Lt-Gen Nhlanhla Mkhwanazi and background on the Political Killings Task Team (PKTT)."
+    },
+    {
+      "id": "ev_timeslive",
+      "title": "Cross-examination of Fannie Nkosi continues at Madlanga inquiry",
+      "tier": "news",
+      "date": "2026-03-23",
+      "publisher": "TimesLIVE",
+      "url": "https://www.timeslive.co.za/politics/2026-03-23-watch-live-cross-examination-of-fannie-nkosi-continues-at-madlanga-inquiry/",
+      "tags": [
+        "news",
+        "witness"
+      ],
+      "summary": "TimesLIVE live reporting on the cross-examination of Sergeant Fannie Nkosi on 23 March 2026."
     }
   ],
   "timeline": [
     {
-      "id": "t1",
-      "date": "2026-03-01",
-      "tier": "official",
-      "title": "Official notice published",
-      "summary": "Placeholder timeline item.",
+      "id": "t_allegation",
+      "date": "2025-07-06",
+      "tier": "news",
+      "title": "Public allegations by Lt-Gen Nhlanhla Mkhwanazi",
+      "summary": "On 6 July 2025 Lt-Gen Nhlanhla Mkhwanazi publicly alleged corruption and political interference in the criminal justice system, triggering calls for inquiry.",
       "sourceIds": [
-        "ev_official"
+        "ev_corruptionwatch"
       ],
       "tags": [
+        "allegation",
+        "news"
+      ]
+    },
+    {
+      "id": "t_establishment",
+      "date": "2025-07",
+      "tier": "official",
+      "title": "Commission established",
+      "summary": "President Cyril Ramaphosa established the Judicial Commission of Inquiry (Madlanga Commission) in response to the allegations.",
+      "sourceIds": [
+        "ev_corruptionwatch"
+      ],
+      "tags": [
+        "establishment",
         "official"
+      ]
+    },
+    {
+      "id": "t_hearings_start",
+      "date": "2025-09-17",
+      "tier": "news",
+      "title": "Hearings commence",
+      "summary": "Public hearings began on 17 September 2025 with Nhlanhla Mkhwanazi giving evidence in the opening week.",
+      "sourceIds": [
+        "ev_corruptionwatch",
+        "ev_sabc"
+      ],
+      "tags": [
+        "hearing",
+        "start"
+      ]
+    },
+    {
+      "id": "t_latest",
+      "date": "2026-03-23",
+      "tier": "news",
+      "title": "Fannie Nkosi testimony (latest)",
+      "summary": "Live reporting and cross-examination of Sergeant Fannie Nkosi took place on 23 March 2026.",
+      "sourceIds": [
+        "ev_sabc",
+        "ev_timeslive"
+      ],
+      "tags": [
+        "hearing",
+        "witness",
+        "live"
       ]
     }
   ]
